@@ -6,14 +6,17 @@
              xmlns:control="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin">
     <ContentPage.Content>
         <StackLayout x:Name="MainLayout" Padding="20, 20, 20, 20" Spacing="35">
-            <control:ProgressRing x:Name="TimerCircle" RingThickness="26" Progress="1" HeightRequest="350" />
-            <Label x:Name="TimeLBL" Text="1:00" FontSize="64" HorizontalOptions="CenterAndExpand" VerticalOptions="Start">
-                <Label.FontFamily>
-                    <OnPlatform x:TypeArguments="x:String">
-                        <On Platform="Android" Value="ErasBoldITC.ttf#Eras Bold ITC" />
-                    </OnPlatform>
-                </Label.FontFamily>
-            </Label>
+            <StackLayout x:Name="TimerAndProgressCircle" Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" SizeChanged="TimerAndProgressCircle_SizeChanged">
+                <control:ProgressRing x:Name="TimerCircle" RingThickness="26" Progress="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+
+                <Label x:Name="TimeLBL" Text="1:00" FontSize="64" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                    <Label.FontFamily>
+                        <OnPlatform x:TypeArguments="x:String">
+                            <On Platform="Android" Value="ErasBoldITC.ttf#Eras Bold ITC" />
+                        </OnPlatform>
+                    </Label.FontFamily>
+                </Label>
+            </StackLayout>
 
             <StackLayout x:Name="StartAndTime" HorizontalOptions="CenterAndExpand" VerticalOptions="End" Orientation="Horizontal" Spacing="45" Padding="0, 50, 0, 0">
                 <flex:FlexButton x:Name="StartBTN" Text="Start" FontSize="26" MinimumWidthRequest="250" CornerRadius="10" Clicked="StartBTN_Clicked">

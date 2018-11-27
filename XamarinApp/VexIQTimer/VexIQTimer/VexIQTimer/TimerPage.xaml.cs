@@ -60,6 +60,22 @@ namespace VexIQTimer
         {
             UpdateThemeColors(e.NewTheme);
         }
+        private void TimerAndProgressCircle_SizeChanged(object sender, EventArgs e)
+        {
+            //Check If Landscape Or Portrait
+            if (TimerAndProgressCircle.Width > TimerAndProgressCircle.Height)
+            {
+                TimerAndProgressCircle.Orientation = StackOrientation.Horizontal;
+                TimerAndProgressCircle.Spacing = 0;
+                TimeLBL.FontSize = 128;
+            }
+            else
+            {
+                TimerAndProgressCircle.Orientation = StackOrientation.Vertical;
+                TimerAndProgressCircle.Spacing = 6;
+                TimeLBL.FontSize = 64;
+            }
+        }
 
         private void StartBTN_Clicked(object sender, EventArgs e)
         {
