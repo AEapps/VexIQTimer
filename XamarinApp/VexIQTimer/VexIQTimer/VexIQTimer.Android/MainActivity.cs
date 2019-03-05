@@ -4,7 +4,7 @@ using Android.OS;
 
 namespace VexIQTimer.Droid
 {
-    [Activity(Label = "VexIQTimer", Icon = "@drawable/VexIQTimerIcon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Vex IQ Timer", Icon = "@drawable/VexIQTimerIcon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

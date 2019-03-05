@@ -13,9 +13,6 @@ namespace VexIQTimer
 
             //Create App Manager Instance
             AppManager.Instance.ToString();
-
-            //Load Data On Start <-Before Creation Of FirstPage->
-            AppManager.Instance.LoadSavedData();
             MainPage = new TimerPage();
         }
 
