@@ -165,8 +165,15 @@ namespace VexIQTimer
             }
 
             //Update The Label
-            string TimeLBLText = $"{CurrentSecondCount / 60}:{CurrentSecondCount % 60:00}";
-            Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = TimeLBLText; });
+            if (CurrentTimerState != TimerState.Stopped)
+            {
+                string TimeLBLText = $"{CurrentSecondCount / 60}:{CurrentSecondCount % 60:00}";
+                Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = TimeLBLText; });
+            }
+            else
+            {
+                Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = "0:00"; });
+            }
         }
     }
 }

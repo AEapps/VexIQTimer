@@ -42,6 +42,7 @@
                                 <x:String>1:00</x:String>
                                 <x:String>0:35</x:String>
                                 <x:String>0:25</x:String>
+                                <x:String>0:10</x:String>
                             </x:Array>
                         </Picker.ItemsSource>
                         <Picker.FontFamily>
