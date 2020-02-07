@@ -11,15 +11,15 @@ namespace VexIQTimer
     public partial class TimerPage : ContentPage
     {
         //Timer Data
+        readonly Timer TimerBackend = new Timer(250);
         TimerState CurrentTimerState = TimerState.Start;
         DateTime TimerStartTime = DateTime.Now;
-        Timer TimerBackend = new Timer(1000); //Interval Every Second
         float TotalSecondCount = 0;
 
         //Audio Players
-        ISimpleAudioPlayer ChangeControllerSoundPlayer;
-        ISimpleAudioPlayer StartGameSoundPlayer;
-        ISimpleAudioPlayer EndGameSoundPlayer;
+        readonly ISimpleAudioPlayer ChangeControllerSoundPlayer;
+        readonly ISimpleAudioPlayer StartGameSoundPlayer;
+        readonly ISimpleAudioPlayer EndGameSoundPlayer;
 
         public TimerPage()
         {
@@ -30,6 +30,7 @@ namespace VexIQTimer
 
             //Get Elapsed Event
             TimerBackend.Elapsed += TimerBackend_Elapsed;
+            TimerBackend.Start();
 
             //Update The Theme
             UpdateThemeColors(AppThemeManager.Instance.CurrentTheme);
@@ -73,7 +74,7 @@ namespace VexIQTimer
             {
                 TimerAndProgressCircle.Orientation = StackOrientation.Vertical;
                 TimerAndProgressCircle.Spacing = 6;
-                TimeLBL.FontSize = 64;
+                TimeLBL.FontSize = 72;
             }
         }
 
@@ -105,7 +106,6 @@ namespace VexIQTimer
                     TotalSecondCount = 0;
                     break;
                 case TimerState.Stopped:
-                    TimerBackend.Stop();
                     EndGameSoundPlayer.Play();
                     break;
                 case TimerState.Running:
@@ -117,16 +117,15 @@ namespace VexIQTimer
                     //Start The Timer
                     TimerStartTime = DateTime.Now;
                     StartGameSoundPlayer.Play();
-                    TimerBackend.Start();
                     break;
             }
         }
+
         private void TimePicker_Focused(object sender, FocusEventArgs e)
         {
             CurrentTimerState = TimerState.Start;
             StartBTN.Text = "Start";
             TotalSecondCount = 0;
-            TimerBackend.Stop();
         }
         private void TimePicker_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -137,43 +136,36 @@ namespace VexIQTimer
 
         private void TimerBackend_Elapsed(object sender, ElapsedEventArgs e)
         {
+            //Make sure we are running
+            if (CurrentTimerState != TimerState.Running) return;
+
             //Find The Total Progress
-            int CurrentSecondCount = (int)TotalSecondCount - (e.SignalTime - TimerStartTime).Seconds;
+            int CurrentSecondCount = (int)TotalSecondCount - (int)(DateTime.Now - TimerStartTime).TotalSeconds;
             float CurrentProgress = CurrentSecondCount / TotalSecondCount;
             TimerCircle.Progress = CurrentProgress;
 
             //Check If We Reached Max
-            if (CurrentProgress <= 0)
+            if (CurrentSecondCount == 0)
             {
-                TimerBackend.Stop();
-                CurrentSecondCount = 0;
-                CurrentTimerState = TimerState.Stopped;
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    EndGameSoundPlayer.Play(); StartBTN.Text = "Reset";
-                });
+                StartBTN_Clicked(this, EventArgs.Empty);
             }
 
             //Check Switch Controller Times
-            if (CurrentSecondCount == 35 && TotalSecondCount != 35)
+            if (!ChangeControllerSoundPlayer.IsPlaying)
             {
-                Device.BeginInvokeOnMainThread(() => { ChangeControllerSoundPlayer.Play(); });
-            }
-            if (CurrentSecondCount == 25 && TotalSecondCount != 25)
-            {
-                Device.BeginInvokeOnMainThread(() => { ChangeControllerSoundPlayer.Play(); });
+                if (CurrentSecondCount == 35 && TotalSecondCount != 35)
+                {
+                    ChangeControllerSoundPlayer.Play();
+                }
+                else if (CurrentSecondCount == 25 && TotalSecondCount != 25)
+                {
+                    ChangeControllerSoundPlayer.Play();
+                }
             }
 
             //Update The Label
-            if (CurrentTimerState != TimerState.Stopped)
-            {
-                string TimeLBLText = $"{CurrentSecondCount / 60}:{CurrentSecondCount % 60:00}";
-                Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = TimeLBLText; });
-            }
-            else
-            {
-                Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = "0:00"; });
-            }
+            string TimeLBLText = $"{CurrentSecondCount / 60}:{CurrentSecondCount % 60:00}";
+            Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = TimeLBLText; });
         }
     }
 }
