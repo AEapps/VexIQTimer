@@ -145,8 +145,9 @@ namespace VexIQTimer
             TimerCircle.Progress = CurrentProgress;
 
             //Check If We Reached Max
-            if (CurrentSecondCount == 0)
+            if (CurrentSecondCount == 0 && CurrentTimerState != TimerState.Stopped)
             {
+                Device.BeginInvokeOnMainThread(() => { TimeLBL.Text = "0:00"; });
                 StartBTN_Clicked(this, EventArgs.Empty);
             }
 
